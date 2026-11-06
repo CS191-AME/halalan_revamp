@@ -24,6 +24,7 @@ class Election extends Model
             'is_running' => 'boolean',
             'results_available' => 'boolean',
             'ballots_enabled' => 'boolean',
+            'started_at' => 'datetime',
         ];
     }
 
@@ -45,4 +46,26 @@ class Election extends Model
             : ($this->results_available ? 'ended' : 'draft');
     }
 
+    public function isDraft(): bool
+    {
+        return $this->started_at === null;
+    }
+
+    // Get all the IDs of the election and its descendants
+    public static function subtreeIds(int $rootId): array
+    {
+        $ids = [$rootId];
+        $frontier = [$rootId];
+
+        while (!empty($frontier)) {
+            $frontier = static::whereIn('parent_id', $frontier)
+                ->pluck('id')
+                ->map(fn ($id) => (int) $id)
+                ->all();
+
+            $ids = array_merge($ids, $frontier);
+        }
+
+        return $ids;
+    }
 }

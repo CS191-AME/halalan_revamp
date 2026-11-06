@@ -23,6 +23,7 @@ class ElectionFactory extends Factory
             'is_running' => false,
             'results_available' => false,
             'ballots_enabled' => false,
+            'started_at' => null,
         ];
     }
 }

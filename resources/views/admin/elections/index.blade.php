@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <head>
-    <title>Admin Elections</title>
+    <title>Halalan Revamp!</title>
 </head>
 <body>
 
@@ -25,11 +25,25 @@
                     <td>{{ $e->parent?->name ?? '—' }}</td>
                     <td>{{ $e->status() }}</td>
                     <td>{{ $e->ballots_enabled ? 'Enabled' : 'Disabled' }}</td>
+                    <td>
+                        <button
+                            type="button"
+                            onclick="document.getElementById('editElectionModal-{{ $e->id }}').showModal()"
+                        > Edit </button>
+                    </td>
                 </tr>
             @endforeach
         </tbody>
     </table>
 
 @include('admin.elections.create')
+
+{{-- Edit popups --}}
+@foreach ($elections as $e)
+    @include('admin.elections.edit', [
+        'election' => $e,
+        'parents' => $parents
+    ])
+@endforeach
 
 </body>

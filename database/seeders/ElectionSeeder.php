@@ -20,6 +20,7 @@ class ElectionSeeder extends Seeder
             'is_running' => true,
             'results_available' => false,
             'ballots_enabled' => true,
+            'started_at' => null,
         ]);
 
         Election::factory()->create([
@@ -28,6 +29,7 @@ class ElectionSeeder extends Seeder
             'is_running' => true,
             'results_available' => false,
             'ballots_enabled' => true,
+            'started_at' => null,
         ]);
 
         Election::factory()->create([
@@ -36,6 +38,7 @@ class ElectionSeeder extends Seeder
             'is_running' => false,
             'results_available' => true,
             'ballots_enabled' => true,
+            'started_at' => '2025-11-01 10:00:00',
         ]);
 
         Election::factory()->create([
@@ -44,6 +47,7 @@ class ElectionSeeder extends Seeder
             'is_running' => false,
             'results_available' => false,
             'ballots_enabled' => false,
+            'started_at' => null,
         ]);
 
         Election::factory()->count(5)->create();
