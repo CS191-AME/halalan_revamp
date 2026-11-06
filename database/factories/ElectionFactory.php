@@ -18,7 +18,11 @@ class ElectionFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'name' => fake()->unique()->words(3, true),
+            'parent_id' => null,
+            'is_running' => false,
+            'results_available' => false,
+            'ballots_enabled' => false,
         ];
     }
 }

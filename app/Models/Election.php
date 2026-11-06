@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Election extends Model
 {
@@ -33,6 +35,14 @@ class Election extends Model
     public function children(): HasMany
     {
         return $this->hasMany(self::class, 'parent_id');
+    }
+
+    // Check the status of the election based on its properties
+    public function status(): string
+    {
+        return $this->is_running
+            ? 'running'
+            : ($this->results_available ? 'ended' : 'draft');
     }
 
 }
