@@ -9,4 +9,30 @@ class Election extends Model
 {
     /** @use HasFactory<\Database\Factories\ElectionFactory> */
     use HasFactory;
+
+    protected $fillable = [
+        'name',
+        'parent_id',
+        'ballots_enabled',
+    ];
+
+    protected function casts(): array
+    {
+        return [
+            'is_running' => 'boolean',
+            'results_available' => 'boolean',
+            'ballots_enabled' => 'boolean',
+        ];
+    }
+
+    public function parent(): BelongsTo
+    {
+        return $this->belongsTo(self::class, 'parent_id');
+    }
+
+    public function children(): HasMany
+    {
+        return $this->hasMany(self::class, 'parent_id');
+    }
+
 }
