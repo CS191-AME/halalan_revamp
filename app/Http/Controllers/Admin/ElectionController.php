@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Election;
+use App\Http\Requests\StoreElectionRequest;
 
 use Illuminate\Http\Request;
 
@@ -17,7 +18,9 @@ class ElectionController extends Controller
     {
         $elections = Election::with('parent')->orderBy('id')->get();
 
-        return view('admin.elections.index', compact('elections'));
+        $parents = Election::orderBy('name')->get();
+
+        return view('admin.elections.index', compact('elections', 'parents'));
     }
 
     /**
@@ -31,9 +34,11 @@ class ElectionController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreElectionRequest $request)
     {
-        //
+        Election::create($request->validated());
+
+        return redirect()->route('admin.elections.index')->with('status', 'Election created.');
     }
 
     /**

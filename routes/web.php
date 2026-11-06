@@ -11,5 +11,6 @@ Route::get('/', function () {
 Route::post('/create_election', [Elections::class, 'createElection']);
 
 Route::prefix('admin')->name('admin.')->group(function () {
-    Route::resource('elections', ElectionController::class);
+    Route::resource('elections', ElectionController::class)
+        ->only(['index', 'store']);
 });
