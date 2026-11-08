@@ -68,4 +68,10 @@ class Election extends Model
 
         return $ids;
     }
+
+    // Get all the positions of the election by ordinality
+    public function positions(): HasMany
+    {
+        return $this->hasMany(Position::class)->orderBy('ordinality');
+    }
 }
