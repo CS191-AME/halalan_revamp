@@ -75,9 +75,7 @@
 
     {{-- Add position button --}}
     @if ($selectedElection?->isDraft() || !$selectedElection?->exists)
-        <button type="button">
-            + Add Position
-        </button>
+        @include('admin.positions.create')
     @endif
 
 </body>
