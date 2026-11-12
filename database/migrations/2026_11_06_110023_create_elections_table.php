@@ -6,22 +6,25 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    /**
+     * Run the migrations.
+     */
     public function up(): void
     {
         Schema::create('elections', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            // NULL = root election
-            $table->foreignId('parent_id')->nullable()->constrained('elections');
+            $table->foreignId('parent_id')->nullable()->constrained('elections')->restrictOnDelete();
             $table->boolean('is_running')->default(false);
             $table->boolean('results_available')->default(false);
             $table->boolean('ballots_enabled')->default(false);
-            // Only changeable while the election is in draft (enforced in app code).
-            // Not in the diagram, but referenced in the constraints text.
-            $table->boolean('receipts_enabled')->default(false);
+            $table->timestamps();
         });
     }
 
+    /**
+     * Reverse the migrations.
+     */
     public function down(): void
     {
         Schema::dropIfExists('elections');
