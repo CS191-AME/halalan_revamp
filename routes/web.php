@@ -35,5 +35,5 @@ Route::prefix('admin')->name('admin.')->group(function () {
         ->name('positions.move');
 
     Route::resource('parties', PartyController::class)
-        ->only(['index', 'store', 'update']);
+        ->only(['index', 'store', 'update', 'destroy']);
 });
