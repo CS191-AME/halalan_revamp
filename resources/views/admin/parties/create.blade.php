@@ -32,9 +32,11 @@
                 required
                 maxlength="255"
             >
-            @error('name')
-                <p>{{ $message }}</p>
-            @enderror
+            @if ($isFailedCreate)
+                @error('name')
+                    <p>{{ $message }}</p>
+                @enderror
+            @endif
         </div>
 
         <div>
@@ -45,9 +47,11 @@
                 name="alias"
                 value="{{ $isFailedCreate ? old('alias') : '' }}"
             >
-            @error('alias')
-                <p>{{ $message }}</p>
-            @enderror
+            @if ($isFailedCreate)
+                @error('alias')
+                    <p>{{ $message }}</p>
+                @enderror
+            @endif
         </div>
 
         <div>
@@ -63,9 +67,11 @@
                     </option>
                 @endforeach
             </select>
-            @error('election_id')
-                <p>{{ $message }}</p>
-            @enderror
+            @if ($isFailedCreate)
+                @error('election_id')
+                    <p>{{ $message }}</p>
+                @enderror
+            @endif
         </div>
 
         <div>
@@ -77,9 +83,11 @@
                 value="{{ $isFailedCreate ? old('description') : '' }}"
                 maxlength="255"
             >
-            @error('description')
-                <p>{{ $message }}</p>
-            @enderror
+            @if ($isFailedCreate)
+                @error('description')
+                    <p>{{ $message }}</p>
+                @enderror
+            @endif
         </div>
 
         <button type="submit">Create Party</button>
