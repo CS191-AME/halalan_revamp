@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
+use App\Http\Requests\UpdatePositionRequest;
+use App\Models\Position;
 
 class PositionController extends Controller
 {
@@ -59,5 +61,20 @@ class PositionController extends Controller
         });
 
         return redirect()->route('admin.positions.index', ['election_id' => $electionId,])->with('status', 'Position added.');
+    }
+
+    public function update(UpdatePositionRequest $request, Position $position): RedirectResponse
+    {
+        DB::transaction(function () use ($request, $position) {
+            $election = Election::lockForUpdate()->findOrFail($position->election_id);
+
+            if (!($election->isDraft())) {
+                throw ValidationException::withMessages(['state' => 'Positions cannot be edited once the election has started']);
+            }
+
+            $position->update($request->validated());
+        });
+
+        return redirect()->route('admin.positions.index', ['election_id' => $position->election_id])->with('status', 'Position updated.');
     }
 }
