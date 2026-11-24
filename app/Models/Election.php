@@ -60,7 +60,7 @@ class Election extends Model
         while (!empty($frontier)) {
             $frontier = static::whereIn('parent_id', $frontier)
                 ->pluck('id')
-                ->map(fn ($id) => (int) $id)
+                ->map(fn($id) => (int) $id)
                 ->all();
 
             $ids = array_merge($ids, $frontier);
@@ -73,5 +73,10 @@ class Election extends Model
     public function positions(): HasMany
     {
         return $this->hasMany(Position::class)->orderBy('ordinality');
+    }
+
+    public function parties(): HasMany
+    {
+        return $this->HasMany(Party::class);
     }
 }
