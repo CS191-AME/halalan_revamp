@@ -24,24 +24,15 @@
         >
 
         {{-- Election name (always editable) --}}
-        <div>
-            <label for="name-{{ $election->id }}">Election Name</label>
-
-            <input
-                type="text"
-                id="name-{{ $election->id }}"
-                name="name"
-                value="{{ $isFailedEdit ? old('name', $election->name) : $election->name }}"
-                required
-                maxlength="255"
-            >
-
-            @if ($isFailedEdit)
-                @error('name')
-                    <p>{{ $message }}</p>
-                @enderror
-            @endif
-        </div>
+        <x-field
+            :id="'name-' . $election->id"
+            name="name"
+            label="Election Name"
+            :value="$isFailedEdit ? old('name', $election->name) : $election->name"
+            :show-error="$isFailedEdit"
+            required
+            maxlength="255"
+        />
 
         {{-- Additional fields are editable only for drafts --}}
         @if ($election->isDraft())
