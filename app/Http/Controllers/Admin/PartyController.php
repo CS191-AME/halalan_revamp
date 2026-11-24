@@ -34,4 +34,17 @@ class PartyController extends Controller
 
         return redirect()->route('admin.parties.index');
     }
+
+    public function destroy(Party $party): RedirectResponse
+    {
+        if ($party->candidates()->exists()) {
+            return redirect()->route('admin.parties.index')
+                ->with('error', 'Cannot delete a party that still has candidates.');
+        }
+
+        $party->delete();
+
+        return redirect()->route('admin.parties.index')
+            ->with('status', 'Party deleted.');
+    }
 }
