@@ -115,6 +115,25 @@ class ElectionController extends Controller
     }
 
     /**
+     * Stop an election and all of its descendants.
+     */
+    public function stop(Election $election): RedirectResponse
+    {
+        if (!$election->is_running) {
+            return redirect()->route('admin.elections.index')
+                ->with('error', 'This election is not running.');
+        }
+
+        // The election, its children, grandchildren, and so on
+        $ids = Election::subtreeIds($election->id);
+
+        Election::whereIn('id', $ids)->update(['is_running' => false]);
+
+        return redirect()->route('admin.elections.index')
+            ->with('status', 'Election stopped.');
+    }
+
+    /**
      * Remove the specified resource from storage.
      */
     public function destroy(string $id)
