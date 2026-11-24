@@ -34,7 +34,7 @@ class StorePositionRequest extends FormRequest
             'name' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string', 'max:2000'],
             'max_selections' => ['required', 'integer', 'min:1', 'max:50'],
-            'ordinality' => ['required', 'integer', 'min:1', 'max:999'],
+            'ordinality' => ['required', 'integer', 'min:1', 'max:65535'],
             'can_abstain' => ['boolean'],
         ];
     }
