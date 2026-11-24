@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-
 use App\Http\Requests\StorePositionRequest;
 use App\Models\Election;
 use Illuminate\Support\Facades\DB;
@@ -49,9 +48,8 @@ class PositionController extends Controller
         DB::transaction(function () use ($data, $electionId) {
 
             $election = Election::lockForUpdate()->findOrFail($electionId);
-            
-            if (!$election->isDraft()) 
-            {
+
+            if (!$election->isDraft()) {
                 throw ValidationException::withMessages(['state' => 'Positions cannot be added once the election has started.',]);
             }
 
