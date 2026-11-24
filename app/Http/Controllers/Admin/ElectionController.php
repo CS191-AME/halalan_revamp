@@ -134,6 +134,42 @@ class ElectionController extends Controller
     }
 
     /**
+     * Show results for a stopped election and its descendants.
+     */
+    public function showResults(Election $election): RedirectResponse
+    {
+        // Results only after the election was started and then stopped
+        if ($election->isDraft() || $election->is_running) {
+            return redirect()->route('admin.elections.index')
+                ->with('error', 'Results can only be shown after the election has been started and stopped.');
+        }
+
+        $ids = Election::subtreeIds($election->id);
+
+        // Skip descendants that are still drafts or running
+        Election::whereIn('id', $ids)
+            ->whereNotNull('started_at')
+            ->where('is_running', false)
+            ->update(['results_available' => true]);
+
+        return redirect()->route('admin.elections.index')
+            ->with('status', 'Results are now visible.');
+    }
+
+    /**
+     * Hide results for an election and its descendants.
+     */
+    public function hideResults(Election $election): RedirectResponse
+    {
+        $ids = Election::subtreeIds($election->id);
+
+        Election::whereIn('id', $ids)->update(['results_available' => false]);
+
+        return redirect()->route('admin.elections.index')
+            ->with('status', 'Results are now hidden.');
+    }
+
+    /**
      * Remove the specified resource from storage.
      */
     public function destroy(string $id)
