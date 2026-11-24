@@ -205,7 +205,8 @@
             font-size: 0.875rem;
         }
 
-        form button[type="submit"] {
+        /* Space above the submit button of create/edit forms (only inside modals) */
+        .modal-content form button[type="submit"] {
             margin-top: 1rem;
         }
 
