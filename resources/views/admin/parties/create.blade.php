@@ -25,6 +25,9 @@
 
             @csrf
 
+            {{-- Invisible input to indicate currently creating NEW party  --}}
+            <input type="hidden" name="_creating_party" value="1">
+
             <div>
                 <label for="party_name">Party Name</label>
                 <input
@@ -92,8 +95,9 @@
     </div>
 </dialog>
 
-{{-- Reopen popup when validation fails (must come AFTER the dialog exists) --}}
-@if ($errors->any())
+
+{{-- Condition prevents opening create dialog box on failed edits --}}
+@if ($errors->any() && old('_creating_party'))
     <script>
         document.getElementById('createPartyModal').showModal();
     </script>
