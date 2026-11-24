@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<head>
+    <title>Halalan Revamp!</title>
+</head>
+<body>
+
+<h1>Parties</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Alias</th>
+                <th>Election</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach ($parties as $p)
+                <tr>
+                    <td>{{ $p->id }}</td>
+                    <td>{{ $p->name }}</td>
+                    <td>{{ $p->alias ?? '—' }}</td>
+                    <td>{{ $p->election->name }}</td>
+                    <td>{{ $p->description ?? '—' }}</td>
+                </tr>
+            @endforeach
+        </tbody>
+    </table>
+
+</body>
