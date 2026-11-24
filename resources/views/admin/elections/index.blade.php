@@ -65,6 +65,29 @@
                                 </button>
                             </form>
                         @endif
+
+                        {{-- Results: only for elections that were started and then stopped --}}
+                        @if (!$e->isDraft() && !$e->is_running)
+                            @if ($e->results_available)
+                                <form
+                                    method="POST"
+                                    action="{{ route('admin.elections.results.hide', $e) }}"
+                                    style="display: inline"
+                                >
+                                    @csrf
+                                    <button type="submit">Hide Results</button>
+                                </form>
+                            @else
+                                <form
+                                    method="POST"
+                                    action="{{ route('admin.elections.results.show', $e) }}"
+                                    style="display: inline"
+                                >
+                                    @csrf
+                                    <button type="submit">Show Results</button>
+                                </form>
+                            @endif
+                        @endif
                     </td>
                 </tr>
             @endforeach
