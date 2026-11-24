@@ -18,6 +18,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::post('elections/{election}/start', [ElectionController::class, 'start'])
         ->name('elections.start');
 
+    Route::post('elections/{election}/stop', [ElectionController::class, 'stop'])
+        ->name('elections.stop');
+
     Route::resource('positions', PositionController::class)
         ->only(['index', 'store', 'update', 'destroy']);
 
