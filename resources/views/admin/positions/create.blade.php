@@ -1,4 +1,11 @@
-{{-- Create Position button --}}
+{{-- True only when the failed submission came from this create form --}}
+@php
+    $isFailedCreate = (bool) old('_creating_position');
+@endphp
+
+{{-- Position creation popup --}}
+
+{{-- Button to open the popup --}}
 <button
     type="button"
     onclick="document.getElementById('createPositionModal').showModal()"
@@ -6,144 +13,114 @@
     + Add Position
 </button>
 
-{{-- Create Position modal --}}
-<dialog id="createPositionModal">
+<x-modal id="createPositionModal" title="Create Position">
 
-    <div class="modal-content">
+    <form method="POST" action="{{ route('admin.positions.store') }}">
 
-        <h2>Create Position</h2>
+        @csrf
 
-        {{-- Close button --}}
-        <button
-            type="button"
-            onclick="document.getElementById('createPositionModal').close()"
-        >
-            ✕
-        </button>
+        {{-- Invisible input to indicate we are creating a NEW position --}}
+        <input type="hidden" name="_creating_position" value="1">
 
-        {{-- Position form --}}
-        <form
-            method="POST"
-            action="{{ route('admin.positions.store') }}"
+        {{-- Selected election --}}
+        <input
+            type="hidden"
+            name="election_id"
+            value="{{ $selectedElection->id }}"
         >
 
-            @csrf
+        {{-- Position name --}}
+        <x-field
+            id="name"
+            name="name"
+            label="Position Name"
+            :value="$isFailedCreate ? old('name') : ''"
+            :show-error="$isFailedCreate"
+            required
+            maxlength="255"
+        />
 
-            {{-- Selected election --}}
-            <input
-                type="hidden"
-                name="election_id"
-                value="{{ $selectedElection->id }}"
-            >
+        {{-- Description --}}
+        <div>
+            <label for="description">Description</label>
 
-            {{-- Position name --}}
-            <div>
-                <label for="name">Position Name</label>
+            <textarea
+                id="description"
+                name="description"
+                maxlength="2000"
+            >{{ $isFailedCreate ? old('description') : '' }}</textarea>
 
-                <input
-                    type="text"
-                    id="name"
-                    name="name"
-                    value="{{ old('name') }}"
-                    required
-                    maxlength="255"
-                >
-
-                @error('name')
-                    <p>{{ $message }}</p>
-                @enderror
-            </div>
-
-            {{-- Description --}}
-            <div>
-                <label for="description">Description</label>
-
-                <textarea
-                    id="description"
-                    name="description"
-                    maxlength="2000"
-                >{{ old('description') }}</textarea>
-
+            @if ($isFailedCreate)
                 @error('description')
                     <p>{{ $message }}</p>
                 @enderror
-            </div>
+            @endif
+        </div>
 
-            {{-- Maximum selections --}}
-            <div>
-                <label for="max_selections">Maximum Selections</label>
+        {{-- Maximum selections --}}
+        <x-field
+            id="max_selections"
+            name="max_selections"
+            label="Maximum Selections"
+            type="number"
+            :value="$isFailedCreate ? old('max_selections', 1) : 1"
+            :show-error="$isFailedCreate"
+            min="1"
+            max="50"
+            step="1"
+            required
+        />
 
+        {{-- Ordinality --}}
+        <x-field
+            id="ordinality"
+            name="ordinality"
+            label="Ordinality"
+            type="number"
+            :value="$isFailedCreate ? old('ordinality', 1) : 1"
+            :show-error="$isFailedCreate"
+            min="1"
+            max="65535"
+            step="1"
+            required
+        />
+
+        {{-- Abstention setting --}}
+        <div>
+            <label>
                 <input
-                    type="number"
-                    id="max_selections"
-                    name="max_selections"
-                    min="1"
-                    max="50"
-                    step="1"
-                    value="{{ old('max_selections', 1) }}"
-                    required
+                    type="checkbox"
+                    name="can_abstain"
+                    value="1"
+                    @checked($isFailedCreate ? old('can_abstain') : true)
                 >
 
-                @error('max_selections')
-                    <p>{{ $message }}</p>
-                @enderror
-            </div>
-            {{-- Ordinality --}}
-            <div>
-                <label for="ordinality">Ordinality</label>
+                Allow abstention
+            </label>
 
-                <input
-                    type="number"
-                    id="ordinality"
-                    name="ordinality"
-                    min="1"
-                    max="65535"
-                    step="1"
-                    value="{{ old('ordinality', 1) }}"
-                    required
-                >
-
-                @error('ordinality')
-                    <p>{{ $message }}</p>
-                @enderror
-            </div>
-
-            {{-- Abstention setting --}}
-            <div>
-                <label>
-                    <input
-                        type="checkbox"
-                        name="can_abstain"
-                        value="1"
-                        @checked(old('can_abstain', true))
-                    >
-
-                    Allow abstention
-                </label>
-
+            @if ($isFailedCreate)
                 @error('can_abstain')
                     <p>{{ $message }}</p>
                 @enderror
-            </div>
+            @endif
+        </div>
 
-            {{-- General state error --}}
+        {{-- General state error --}}
+        @if ($isFailedCreate)
             @error('state')
                 <p>{{ $message }}</p>
             @enderror
+        @endif
 
-            {{-- Buttons --}}
-            <button type="submit">
-                Create Position
-            </button>
+        {{-- Form buttons --}}
+        <button type="submit">Create Position</button>
 
-        </form>
+    </form>
 
-    </div>
+</x-modal>
 
-</dialog>
-
-{{-- Reopen modal when validation fails --}}
-@if ($errors->any())
+{{-- Reopen creation popup only when failing in create position dialog --}}
+@if ($errors->any() && $isFailedCreate)
     <script>
         document.getElementById('createPositionModal').showModal();
     </script>
