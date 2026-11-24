@@ -7,5 +7,7 @@
     <ul>
         <li><a href="{{ route('admin.elections.index') }}">Manage Elections</a></li>
         <li><a href="{{ route('admin.positions.index') }}">Manage Positions</a></li>
+        <li><a href="{{ route('admin.parties.index') }}">Manage Parties</a></li>
+        <li>Manage Candidates (TODO)</li>
     </ul>
 </x-app-layout>
