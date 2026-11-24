@@ -4,7 +4,7 @@
 @endphp
 
 <x-modal
-    id="editElectionModal-{{ $election->id }}"
+    :id="'editElectionModal-' . $election->id"
     title="Edit Election"
 >
 
