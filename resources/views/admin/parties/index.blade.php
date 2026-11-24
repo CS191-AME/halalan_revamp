@@ -1,8 +1,5 @@
-<!DOCTYPE html>
-<head>
-    <title>Halalan Revamp!</title>
-</head>
-<body>
+<x-app-layout title="Parties">
+
 
 <h1>Parties</h1>
 
@@ -43,4 +40,4 @@
 
 @include('admin.parties.create')
 
-</body>
+</x-app-layout>
