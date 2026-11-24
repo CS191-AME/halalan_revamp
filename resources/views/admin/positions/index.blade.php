@@ -1,9 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>Halalan Revamp!</title>
-</head>
-<body>
+<x-app-layout title="Positions">
 
     <h1>Manage Positions</h1>
 
@@ -41,8 +36,12 @@
 
     </form>
 
-    {{-- Positions table --}}
+    {{-- No elections available --}}
+    @if ($elections->isEmpty())
+        <p>No elections have been created yet.</p>
+    @endif
 
+    {{-- Positions table --}}
     <table>
         <thead>
             <tr>
@@ -56,26 +55,34 @@
         </thead>
 
         <tbody>
-            @forelse ($positions as $position)
+            @if (!$selectedElection)
                 <tr>
-                    <td>{{ $position->id }}</td>
-                    <td>{{ $position->name }}</td>
-                    <td>{{ $position->description ?? '—' }}</td>
-                    <td>{{ $position->max_selections }}</td>
-                    <td>{{ $position->can_abstain ? 'Yes' : 'No' }}</td>
-                    <td>{{ $position->ordinality }}</td>
+                    <td colspan="6">Please choose an election.</td>
                 </tr>
-            @empty
+
+            @elseif ($positions->isEmpty())
                 <tr>
-                    <td colspan="6">No positions found.</td>
+                    <td colspan="6">No positions found for this election.</td>
                 </tr>
-            @endforelse
+
+            @else
+                @foreach ($positions as $position)
+                    <tr>
+                        <td>{{ $position->id }}</td>
+                        <td>{{ $position->name }}</td>
+                        <td>{{ $position->description ?? '—' }}</td>
+                        <td>{{ $position->max_selections }}</td>
+                        <td>{{ $position->can_abstain ? 'Yes' : 'No' }}</td>
+                        <td>{{ $position->ordinality }}</td>
+                    </tr>
+                @endforeach
+            @endif
         </tbody>
     </table>
 
-    {{-- Add position button --}}
-    @if ($selectedElection?->isDraft() || !$selectedElection?->exists)
+    {{-- Add position form --}}
+    @if ($selectedElection && $selectedElection->isDraft())
         @include('admin.positions.create')
     @endif
 
-</body>
+</x-app-layout>
