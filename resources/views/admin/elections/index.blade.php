@@ -43,7 +43,17 @@
                             onclick="document.getElementById('editElectionModal-{{ $e->id }}').showModal()"
                         > Edit </button>
 
-                        @unless ($e->is_running)
+                        @if ($e->is_running)
+                            <form
+                                method="POST"
+                                action="{{ route('admin.elections.stop', $e) }}"
+                                onsubmit="return confirm('Stop this election and all of its child elections?')"
+                                style="display: inline"
+                            >
+                                @csrf
+                                <button type="submit">Stop</button>
+                            </form>
+                        @else
                             <form
                                 method="POST"
                                 action="{{ route('admin.elections.start', $e) }}"
@@ -54,7 +64,7 @@
                                     {{ $e->isDraft() ? 'Start' : 'Restart' }}
                                 </button>
                             </form>
-                        @endunless
+                        @endif
                     </td>
                 </tr>
             @endforeach
