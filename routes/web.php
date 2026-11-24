@@ -5,9 +5,7 @@ use App\Http\Controllers\Admin\ElectionController;
 use App\Http\Controllers\Admin\PositionController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('admin/elections.index');
-});
+Route::view('/', 'home');
 
 Route::post('/create_election', [Elections::class, 'createElection']);
 
