@@ -22,37 +22,23 @@
         {{-- Invisible input to indicate we are creating a NEW party --}}
         <input type="hidden" name="_creating_party" value="1">
 
-        <div>
-            <label for="party_name">Party Name</label>
-            <input
-                type="text"
-                id="party_name"
-                name="name"
-                value="{{ $isFailedCreate ? old('name') : '' }}"
-                required
-                maxlength="255"
-            >
-            @if ($isFailedCreate)
-                @error('name')
-                    <p>{{ $message }}</p>
-                @enderror
-            @endif
-        </div>
+        <x-field
+            id="party_name"
+            name="name"
+            label="Party Name"
+            :value="$isFailedCreate ? old('name') : ''"
+            :show-error="$isFailedCreate"
+            required
+            maxlength="255"
+        />
 
-        <div>
-            <label for="party_alias">Alias</label>
-            <input
-                type="text"
-                id="party_alias"
-                name="alias"
-                value="{{ $isFailedCreate ? old('alias') : '' }}"
-            >
-            @if ($isFailedCreate)
-                @error('alias')
-                    <p>{{ $message }}</p>
-                @enderror
-            @endif
-        </div>
+        <x-field
+            id="party_alias"
+            name="alias"
+            label="Alias"
+            :value="$isFailedCreate ? old('alias') : ''"
+            :show-error="$isFailedCreate"
+        />
 
         <div>
             <label for="party_election_id">Election</label>
@@ -74,21 +60,14 @@
             @endif
         </div>
 
-        <div>
-            <label for="party_description">Description</label>
-            <input
-                type="text"
-                id="party_description"
-                name="description"
-                value="{{ $isFailedCreate ? old('description') : '' }}"
-                maxlength="255"
-            >
-            @if ($isFailedCreate)
-                @error('description')
-                    <p>{{ $message }}</p>
-                @enderror
-            @endif
-        </div>
+        <x-field
+            id="party_description"
+            name="description"
+            label="Description"
+            :value="$isFailedCreate ? old('description') : ''"
+            :show-error="$isFailedCreate"
+            maxlength="255"
+        />
 
         <button type="submit">Create Party</button>
 
