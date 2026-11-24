@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Election App</title>
+    <title>Halalan Placeholder Home</title>
 </head>
 <body>
     <h1>Halalan Revamp</h1>
