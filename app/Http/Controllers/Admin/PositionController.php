@@ -8,10 +8,12 @@ use App\Http\Requests\StorePositionRequest;
 use App\Models\Election;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 
 class PositionController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request): View
     {
         $request->validate([
             'election_id' => ['nullable', 'integer', 'exists:elections,id'],
@@ -37,7 +39,7 @@ class PositionController extends Controller
         ));
     }
 
-    public function store(StorePositionRequest $request)
+    public function store(StorePositionRequest $request): RedirectResponse
     {
         $data = $request->validated();
 
