@@ -88,6 +88,20 @@
                                 </form>
                             @endif
                         @endif
+
+                        {{-- Delete: draft elections only --}}
+                        @if ($e->isDraft())
+                            <form
+                                method="POST"
+                                action="{{ route('admin.elections.destroy', $e) }}"
+                                onsubmit="return confirm('Delete this election?')"
+                                style="display: inline"
+                            >
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit">Delete</button>
+                            </form>
+                        @endif
                     </td>
                 </tr>
             @endforeach

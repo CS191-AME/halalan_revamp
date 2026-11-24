@@ -13,7 +13,7 @@ Route::post('/create_election', [Elections::class, 'createElection']);
 Route::prefix('admin')->name('admin.')->group(function () {
 
     Route::resource('elections', ElectionController::class)
-        ->only(['index', 'store', 'update']);
+        ->only(['index', 'store', 'update', 'destroy']);
 
     Route::post('elections/{election}/start', [ElectionController::class, 'start'])
         ->name('elections.start');
@@ -35,5 +35,5 @@ Route::prefix('admin')->name('admin.')->group(function () {
         ->name('positions.move');
 
     Route::resource('parties', PartyController::class)
-        ->only(['index', 'store', 'update']);
+        ->only(['index', 'store', 'update', 'destroy']);
 });

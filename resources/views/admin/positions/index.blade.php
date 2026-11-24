@@ -7,6 +7,11 @@
         <p>{{ session('status') }}</p>
     @endif
 
+    {{-- Error message --}}
+    @if (session('error'))
+        <p>Error: {{ session('error') }}</p>
+    @endif
+
     {{-- Election selection --}}
     <form method="GET" action="{{ route('admin.positions.index') }}">
 
@@ -83,6 +88,17 @@
                                 >
                                     Edit
                                 </button>
+
+                                <form
+                                    method="POST"
+                                    action="{{ route('admin.positions.destroy', $position) }}"
+                                    onsubmit="return confirm('Delete this position?')"
+                                    style="display: inline"
+                                >
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit">Delete</button>
+                                </form>
                             @endif
                         </td>
                     </tr>
