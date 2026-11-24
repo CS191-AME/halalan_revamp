@@ -77,6 +77,6 @@ class Election extends Model
 
     public function parties(): HasMany
     {
-        return $this->HasMany(Party::class);
+        return $this->hasMany(Party::class);
     }
 }
