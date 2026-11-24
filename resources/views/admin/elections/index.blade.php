@@ -8,9 +8,10 @@
             <tr>
                 <th>ID</th>
                 <th>Name</th>
-                <th>Parent Election</th>
+                <th>Parent</th>
                 <th>Status</th>
                 <th>Ballots</th>
+                <th>Actions</th>
             </tr>
         </thead>
 
