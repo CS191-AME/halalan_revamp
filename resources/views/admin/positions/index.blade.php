@@ -51,18 +51,19 @@
                 <th>Max Selections</th>
                 <th>Abstain Allowed</th>
                 <th>Ordinality</th>
+                <th>Actions</th>
             </tr>
         </thead>
 
         <tbody>
             @if (!$selectedElection)
                 <tr>
-                    <td colspan="6">Please choose an election.</td>
+                    <td colspan="7">Please choose an election.</td>
                 </tr>
 
             @elseif ($positions->isEmpty())
                 <tr>
-                    <td colspan="6">No positions found for this election.</td>
+                    <td colspan="7">No positions found for this election.</td>
                 </tr>
 
             @else
@@ -74,14 +75,28 @@
                         <td>{{ $position->max_selections }}</td>
                         <td>{{ $position->can_abstain ? 'Yes' : 'No' }}</td>
                         <td>{{ $position->ordinality }}</td>
+                        <td>
+                            @if ($selectedElection->isDraft())
+                                <button
+                                    type="button"
+                                    onclick="document.getElementById('editPositionModal-{{ $position->id }}').showModal()"
+                                >
+                                    Edit
+                                </button>
+                            @endif
+                        </td>
                     </tr>
                 @endforeach
             @endif
         </tbody>
     </table>
 
-    {{-- Add position form --}}
+    {{-- Add and edit popups (only while the election is still a draft) --}}
     @if ($selectedElection && $selectedElection->isDraft())
+        @foreach ($positions as $position)
+            @include('admin.positions.edit', ['position' => $position])
+        @endforeach
+
         @include('admin.positions.create')
     @endif
 
