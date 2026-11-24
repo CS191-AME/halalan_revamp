@@ -1,4 +1,9 @@
-{{--- Election creation popup ---}}
+{{-- True only when the failed submission came from this create form --}}
+@php
+    $isFailedCreate = (bool) old('_creating_election');
+@endphp
+
+{{-- Election creation popup --}}
 
 {{-- Button to open the popup --}}
 <button
@@ -8,100 +13,81 @@
     +
 </button>
 
-{{-- Creation popup --}}
-<dialog id="createElectionModal">
+<x-modal id="createElectionModal" title="Create Election">
 
-    <div class="modal-content">
+    <form method="POST" action="{{ route('admin.elections.store') }}">
 
-        <h2>Create Election</h2>
+        @csrf
 
-        {{-- Close popup --}}
-        <button
-            type="button"
-            onclick="document.getElementById('createElectionModal').close()"
-        >
-            ✕
-        </button>
+        {{-- Invisible input to indicate we are creating a NEW election --}}
+        <input type="hidden" name="_creating_election" value="1">
 
-        {{-- Creation form --}}
-        <form method="POST" action="{{ route('admin.elections.store') }}">
+        {{-- Election name --}}
+        <x-field
+            id="name"
+            name="name"
+            label="Election Name"
+            :value="$isFailedCreate ? old('name') : ''"
+            :show-error="$isFailedCreate"
+            required
+            maxlength="255"
+        />
 
-            @csrf
+        {{-- Parent election --}}
+        <div>
+            <label for="parent_id">Parent Election</label>
 
-            {{-- Inivisible input to indicate currently creating NEW election --}}
-            <input type="hidden" name="_creating_election" value="1">
+            <select id="parent_id" name="parent_id">
 
-            {{-- Election name --}}
-            <div>
-                <label for="name">Election Name</label>
+                <option value="">None (root election)</option>
 
-                <input
-                    type="text"
-                    id="name"
-                    name="name"
-                    value="{{ old('name') }}"
-                    required
-                    maxlength="255"
-                >
+                @foreach ($parents as $parent)
+                    <option
+                        value="{{ $parent->id }}"
+                        @selected($isFailedCreate && old('parent_id') == $parent->id)
+                    >
+                        {{ $parent->name }}
+                    </option>
+                @endforeach
 
-                @error('name')
-                    <p>{{ $message }}</p>
-                @enderror
-            </div>
+            </select>
 
-            {{-- Parent election --}}
-            <div>
-                <label for="parent_id">Parent Election</label>
-
-                <select id="parent_id" name="parent_id">
-
-                    <option value="">None (root election)</option>
-
-                    @foreach ($parents as $parent)
-                        <option
-                            value="{{ $parent->id }}"
-                            @selected(old('parent_id') == $parent->id)
-                        >
-                            {{ $parent->name }}
-                        </option>
-                    @endforeach
-
-                </select>
-
+            @if ($isFailedCreate)
                 @error('parent_id')
                     <p>{{ $message }}</p>
                 @enderror
-            </div>
+            @endif
+        </div>
 
-            {{-- Enable ballots --}}
-            <div>
-                <label>
-                    <input
-                        type="checkbox"
-                        name="ballots_enabled"
-                        value="1"
-                        @checked(old('ballots_enabled'))
-                    >
+        {{-- Enable ballots --}}
+        <div>
+            <label>
+                <input
+                    type="checkbox"
+                    name="ballots_enabled"
+                    value="1"
+                    @checked($isFailedCreate && old('ballots_enabled'))
+                >
 
-                    Enable ballots
-                </label>
+                Enable ballots
+            </label>
 
+            @if ($isFailedCreate)
                 @error('ballots_enabled')
                     <p>{{ $message }}</p>
                 @enderror
-            </div>
+            @endif
+        </div>
 
-            {{-- Form buttons --}}
-            <button type="submit">Create Election</button>
+        {{-- Form buttons --}}
+        <button type="submit">Create Election</button>
 
-        </form>
+    </form>
 
-    </div>
-</dialog>
+</x-modal>
 
-
-{{-- Reopen creation popup only when failing in create election dialog--}}
-@if ($errors->any() && old('_creating_election'))
+{{-- Reopen creation popup only when failing in create election dialog --}}
+@if ($errors->any() && $isFailedCreate)
     <script>
         document.getElementById('createElectionModal').showModal();
     </script>

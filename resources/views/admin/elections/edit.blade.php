@@ -3,146 +3,126 @@
     $isFailedEdit = (string) old('_editing_election_id') === (string) $election->id;
 @endphp
 
-{{-- Edit popup --}}
-<dialog id="editElectionModal-{{ $election->id }}">
+<x-modal
+    :id="'editElectionModal-' . $election->id"
+    title="Edit Election"
+>
 
-    <div class="modal-content">
+    <form
+        method="POST"
+        action="{{ route('admin.elections.update', $election) }}"
+    >
 
-        <h2>Edit Election</h2>
+        @csrf
+        @method('PUT')
 
-        <button
-            type="button"
-            onclick="document.getElementById('editElectionModal-{{ $election->id }}').close()"
+        {{-- Used to reopen the correct popup after validation fails --}}
+        <input
+            type="hidden"
+            name="_editing_election_id"
+            value="{{ $election->id }}"
         >
-            ✕
-        </button>
 
-        <form
-            method="POST"
-            action="{{ route('admin.elections.update', $election) }}"
-        >
+        {{-- Election name (always editable) --}}
+        <x-field
+            :id="'name-' . $election->id"
+            name="name"
+            label="Election Name"
+            :value="$isFailedEdit ? old('name', $election->name) : $election->name"
+            :show-error="$isFailedEdit"
+            required
+            maxlength="255"
+        />
 
-            @csrf
-            @method('PUT')
+        {{-- Additional fields are editable only for drafts --}}
+        @if ($election->isDraft())
 
-            {{-- Used to reopen the correct popup after validation fails --}}
-            <input
-                type="hidden"
-                name="_editing_election_id"
-                value="{{ $election->id }}"
-            >
-
-            {{-- Election name (always editable) --}}
+            {{-- Parent election --}}
             <div>
-                <label for="name-{{ $election->id }}">Election Name</label>
+                <label for="parent_id-{{ $election->id }}">
+                    Parent Election
+                </label>
 
-                <input
-                    type="text"
-                    id="name-{{ $election->id }}"
-                    name="name"
-                    value="{{ $isFailedEdit ? old('name', $election->name) : $election->name }}"
-                    required
-                    maxlength="255"
+                <select
+                    id="parent_id-{{ $election->id }}"
+                    name="parent_id"
                 >
 
+                    <option value="">None (root election)</option>
+
+                    @foreach ($parents as $parent)
+                        @if ($parent->id !== $election->id)
+
+                            <option
+                                value="{{ $parent->id }}"
+                                @selected(
+                                    (string) ($isFailedEdit
+                                        ? old('parent_id', $election->parent_id)
+                                        : $election->parent_id)
+                                    === (string) $parent->id
+                                )
+                            >
+                                {{ $parent->name }}
+                            </option>
+
+                        @endif
+                    @endforeach
+
+                </select>
+
                 @if ($isFailedEdit)
-                    @error('name')
+                    @error('parent_id')
                         <p>{{ $message }}</p>
                     @enderror
                 @endif
             </div>
 
-            {{-- Additional fields are editable only for drafts --}}
-            @if ($election->isDraft())
-
-                {{-- Parent election --}}
-                <div>
-                    <label for="parent_id-{{ $election->id }}">
-                        Parent Election
-                    </label>
-
-                    <select
-                        id="parent_id-{{ $election->id }}"
-                        name="parent_id"
+            {{-- Ballot setting --}}
+            <div>
+                <label>
+                    <input
+                        type="checkbox"
+                        name="ballots_enabled"
+                        value="1"
+                        @checked(
+                            $isFailedEdit
+                                ? old('ballots_enabled', false)
+                                : $election->ballots_enabled
+                        )
                     >
 
-                        <option value="">None (root election)</option>
+                    Enable ballots
+                </label>
 
-                        @foreach ($parents as $parent)
-                            @if ($parent->id !== $election->id)
+                @if ($isFailedEdit)
+                    @error('ballots_enabled')
+                        <p>{{ $message }}</p>
+                    @enderror
+                @endif
+            </div>
 
-                                <option
-                                    value="{{ $parent->id }}"
-                                    @selected(
-                                        (string) ($isFailedEdit
-                                            ? old('parent_id', $election->parent_id)
-                                            : $election->parent_id)
-                                        === (string) $parent->id
-                                    )
-                                >
-                                    {{ $parent->name }}
-                                </option>
+        @else
 
-                            @endif
-                        @endforeach
+            <p>
+                This election has already started.
+                Only its name can be changed.
+            </p>
 
-                    </select>
+        @endif
 
-                    @if ($isFailedEdit)
-                        @error('parent_id')
-                            <p>{{ $message }}</p>
-                        @enderror
-                    @endif
-                </div>
+        {{-- Form buttons --}}
+        <button type="submit">Save Changes</button>
 
-                {{-- Ballot setting --}}
-                <div>
-                    <label>
-                        <input
-                            type="checkbox"
-                            name="ballots_enabled"
-                            value="1"
-                            @checked(
-                                $isFailedEdit
-                                    ? old('ballots_enabled', false)
-                                    : $election->ballots_enabled
-                            )
-                        >
+        <button
+            type="button"
+            onclick="document.getElementById('editElectionModal-{{ $election->id }}').close()"
+        >
+            Cancel
+        </button>
 
-                        Enable ballots
-                    </label>
+    </form>
 
-                    @if ($isFailedEdit)
-                        @error('ballots_enabled')
-                            <p>{{ $message }}</p>
-                        @enderror
-                    @endif
-                </div>
-
-            @else
-
-                <p>
-                    This election has already started.
-                    Only its name can be changed.
-                </p>
-
-            @endif
-
-            {{-- Form buttons --}}
-            <button type="submit">Save Changes</button>
-
-            <button
-                type="button"
-                onclick="document.getElementById('editElectionModal-{{ $election->id }}').close()"
-            >
-                Cancel
-            </button>
-
-        </form>
-
-    </div>
-
-</dialog>
+</x-modal>
 
 {{-- Reopen this particular popup if its validation fails --}}
 @if ($errors->any() && $isFailedEdit)

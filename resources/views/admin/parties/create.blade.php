@@ -1,3 +1,8 @@
+{{-- True only when the failed submission came from this create form --}}
+@php
+    $isFailedCreate = (bool) old('_creating_party');
+@endphp
+
 {{-- Party creation popup --}}
 
 {{-- Button to open the popup --}}
@@ -8,96 +13,70 @@
     +
 </button>
 
-<dialog id="createPartyModal">
+<x-modal id="createPartyModal" title="Create Party">
 
-    <div class="modal-content">
+    <form method="POST" action="{{ route('admin.parties.store') }}">
 
-        <h2>Create Party</h2>
+        @csrf
 
-        <button
-            type="button"
-            onclick="document.getElementById('createPartyModal').close()"
-        >
-            ✕
-        </button>
+        {{-- Invisible input to indicate we are creating a NEW party --}}
+        <input type="hidden" name="_creating_party" value="1">
 
-        <form method="POST" action="{{ route('admin.parties.store') }}">
+        <x-field
+            id="party_name"
+            name="name"
+            label="Party Name"
+            :value="$isFailedCreate ? old('name') : ''"
+            :show-error="$isFailedCreate"
+            required
+            maxlength="255"
+        />
 
-            @csrf
+        <x-field
+            id="party_alias"
+            name="alias"
+            label="Alias"
+            :value="$isFailedCreate ? old('alias') : ''"
+            :show-error="$isFailedCreate"
+        />
 
-            {{-- Invisible input to indicate currently creating NEW party  --}}
-            <input type="hidden" name="_creating_party" value="1">
-
-            <div>
-                <label for="party_name">Party Name</label>
-                <input
-                    type="text"
-                    id="party_name"
-                    name="name"
-                    value="{{ old('name') }}"
-                    required
-                    maxlength="255"
-                >
-                @error('name')
-                    <p>{{ $message }}</p>
-                @enderror
-            </div>
-
-            <div>
-                <label for="party_alias">Alias</label>
-                <input
-                    type="text"
-                    id="party_alias"
-                    name="alias"
-                    value="{{ old('alias') }}"
-                >
-                @error('alias')
-                    <p>{{ $message }}</p>
-                @enderror
-            </div>
-
-            <div>
-                <label for="party_election_id">Election</label>
-                <select id="party_election_id" name="election_id" required>
-                    <option value="">Select an election</option>
-                    @foreach ($elections as $election)
-                        <option
-                            value="{{ $election->id }}"
-                            @selected(old('election_id') == $election->id)
-                        >
-                            {{ $election->name }}
-                        </option>
-                    @endforeach
-                </select>
+        <div>
+            <label for="party_election_id">Election</label>
+            <select id="party_election_id" name="election_id" required>
+                <option value="">Select an election</option>
+                @foreach ($elections as $election)
+                    <option
+                        value="{{ $election->id }}"
+                        @selected($isFailedCreate && old('election_id') == $election->id)
+                    >
+                        {{ $election->name }}
+                    </option>
+                @endforeach
+            </select>
+            @if ($isFailedCreate)
                 @error('election_id')
                     <p>{{ $message }}</p>
                 @enderror
-            </div>
+            @endif
+        </div>
 
-            <div>
-                <label for="party_description">Description</label>
-                <input
-                    type="text"
-                    id="party_description"
-                    name="description"
-                    value="{{ old('description') }}"
-                    maxlength="255"
-                >
-                @error('description')
-                    <p>{{ $message }}</p>
-                @enderror
-            </div>
+        <x-field
+            id="party_description"
+            name="description"
+            label="Description"
+            :value="$isFailedCreate ? old('description') : ''"
+            :show-error="$isFailedCreate"
+            maxlength="255"
+        />
 
-            <button type="submit">Create Party</button>
+        <button type="submit">Create Party</button>
 
-        </form>
+    </form>
 
-    </div>
-</dialog>
+</x-modal>
 
-
-{{-- Condition prevents opening create dialog box on failed edits --}}
-@if ($errors->any() && old('_creating_party'))
+{{-- Reopen creation popup only when failing in create party dialog --}}
+@if ($errors->any() && $isFailedCreate)
     <script>
         document.getElementById('createPartyModal').showModal();
     </script>

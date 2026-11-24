@@ -1,19 +1,17 @@
-<!DOCTYPE html>
-<head>
-    <title>Halalan Revamp!</title>
-</head>
-<body>
+<x-app-layout title="Elections">
 
-<h1>Elections</h1>
+
+    <h1>Elections</h1>
 
     <table>
         <thead>
             <tr>
                 <th>ID</th>
                 <th>Name</th>
-                <th>Parent Election</th>
+                <th>Parent</th>
                 <th>Status</th>
                 <th>Ballots</th>
+                <th>Actions</th>
             </tr>
         </thead>
 
@@ -46,4 +44,5 @@
     ])
 @endforeach
 
-</body>
+</x-app-layout>
+
