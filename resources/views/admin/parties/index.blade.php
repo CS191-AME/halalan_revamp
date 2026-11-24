@@ -1,7 +1,16 @@
 <x-app-layout title="Parties">
 
+    <h1>Parties</h1>
 
-<h1>Parties</h1>
+    {{-- Success message --}}
+    @if (session('status'))
+        <p>{{ session('status') }}</p>
+    @endif
+
+    {{-- Error message --}}
+    @if (session('error'))
+        <p>Error: {{ session('error') }}</p>
+    @endif
 
     <table>
         <thead>
@@ -28,16 +37,27 @@
                             onclick="document.getElementById('editPartyModal-{{ $p->id }}').showModal()">
                             Edit
                         </button>
+
+                        <form
+                            method="POST"
+                            action="{{ route('admin.parties.destroy', $p) }}"
+                            onsubmit="return confirm('Delete this party?')"
+                            style="display: inline"
+                        >
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit">Delete</button>
+                        </form>
                     </td>
                 </tr>
             @endforeach
         </tbody>
     </table>
 
-@foreach ($parties as $p)
-    @include('admin.parties.edit', ['party' => $p, 'elections' => $elections])
-@endforeach
+    @foreach ($parties as $p)
+        @include('admin.parties.edit', ['party' => $p, 'elections' => $elections])
+    @endforeach
 
-@include('admin.parties.create')
+    @include('admin.parties.create')
 
 </x-app-layout>
