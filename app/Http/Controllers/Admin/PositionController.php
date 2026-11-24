@@ -77,4 +77,35 @@ class PositionController extends Controller
 
         return redirect()->route('admin.positions.index', ['election_id' => $position->election_id])->with('status', 'Position updated.');
     }
+
+    public function destroy(Position $position): RedirectResponse
+    {
+        $backTo = redirect()->route('admin.positions.index', ['election_id' => $position->election_id]);
+
+        $error = DB::transaction(function () use ($position) {
+            $election = Election::lockForUpdate()->findOrFail($position->election_id);
+
+            if (!$election->isDraft()) {
+                return 'Positions cannot be deleted once the election has started.';
+            }
+
+            if ($position->candidates()->exists()) {
+                return 'Cannot delete a position that still has candidates.';
+            }
+
+            if (DB::table('blocks_elections_positions')->where('position_id', $position->id)->exists()) {
+                return 'Cannot delete a position that a block can vote on.';
+            }
+
+            $position->delete();
+
+            return null;
+        });
+
+        if ($error !== null) {
+            return $backTo->with('error', $error);
+        }
+
+        return $backTo->with('status', 'Position deleted.');
+    }
 }
