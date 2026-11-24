@@ -6,7 +6,6 @@
     <title>{{ $title ?? 'Halalan Revamp' }}</title>
 
     <style>
-        /* ---------- Page and card ---------- */
         body {
             margin: 0;
             padding: 2rem;
@@ -21,7 +20,6 @@
             padding: 1.5rem;
             background: #fff;
             border-radius: 0.75rem;
-            border-left: 0.5rem solid #7c3aed;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         }
 
@@ -34,7 +32,7 @@
             margin-top: 0;
         }
 
-        /* ---------- Flash messages (bare <p> directly inside .card) ---------- */
+        /* flash messages are bare p tags directly inside the card */
         .card > p {
             padding: 0.75rem 1rem;
             border-radius: 0.5rem;
@@ -52,7 +50,6 @@
             color: #991b1b;
         }
 
-        /* ---------- Table ---------- */
         table {
             width: 100%;
             border-collapse: collapse;
@@ -76,7 +73,7 @@
             background: #f9fafb;
         }
 
-        /* Forms inside table cells sit on one line next to each other */
+        /* forms inside table cells sit on one line */
         td form {
             display: inline;
         }
@@ -85,7 +82,6 @@
             margin-right: 0.25rem;
         }
 
-        /* ---------- Buttons ---------- */
         button {
             padding: 0.4rem 0.9rem;
             border: none;
@@ -100,26 +96,27 @@
             background: #d1d5db;
         }
 
+        /* green submit buttons (Save changes, Create, Filter) */
         button[type="submit"] {
-            background: #2563eb;
+            background: #16a34a;
             color: #fff;
         }
 
         button[type="submit"]:hover {
-            background: #1d4ed8;
+            background: #15803d;
         }
 
-        /* Red Delete button: any button inside a form that has a DELETE method input */
+        /* delete button: any button in a form that has a DELETE method input */
         form:has(input[name="_method"][value="DELETE"]) button {
-            background: #dc2626;
+            background: #f87171;
             color: #fff;
         }
 
         form:has(input[name="_method"][value="DELETE"]) button:hover {
-            background: #b91c1c;
+            background: #ef4444;
         }
 
-        /* ---------- Status pill (Running / Not Running) ---------- */
+        /* status pill */
         button.status-pill {
             display: inline-flex;
             align-items: center;
@@ -146,23 +143,25 @@
             background: #22c55e;
         }
 
-        /* ---------- Results toggle button (Show / Hide) ---------- */
+        /* results button: white like the pill, grey when disabled */
         button.results-button {
-            background: #7c3aed;
-            color: #fff;
+            background: #fff;
+            color: #1f2937;
+            border: 1px solid #d1d5db;
         }
 
         button.results-button:hover {
-            background: #6d28d9;
+            background: #f3f4f6;
         }
 
         button.results-button:disabled {
             background: #e5e7eb;
             color: #9ca3af;
+            border-color: #e5e7eb;
             cursor: not-allowed;
         }
 
-        /* ---------- Tree indent (child elections) ---------- */
+        /* indent for child elections */
         .tree-name {
             padding-left: 0.75rem;
         }
@@ -171,7 +170,6 @@
             border-left: 2px solid #d1d5db;
         }
 
-        /* ---------- Form fields ---------- */
         label {
             display: block;
             margin-top: 0.75rem;
@@ -198,19 +196,19 @@
             font: inherit;
         }
 
-        /* Validation messages (<p> inside any form) */
+        /* validation messages inside forms */
         form p {
             margin: 0.25rem 0 0;
             color: #dc2626;
             font-size: 0.875rem;
         }
 
-        /* Space above the submit button of create/edit forms (only inside modals) */
+        /* space above the submit button, only inside modals */
         .modal-content form button[type="submit"] {
             margin-top: 1rem;
         }
 
-        /* GET filter form: fields sit side by side instead of full width */
+        /* GET filter form: fields side by side */
         form[method="GET"] {
             display: flex;
             align-items: center;
@@ -228,7 +226,6 @@
             margin-top: 0;
         }
 
-        /* ---------- Modal (<dialog>) ---------- */
         .modal {
             width: 32rem;
             max-width: 90vw;
@@ -246,7 +243,7 @@
             padding: 1.5rem;
         }
 
-        /* The x close button: only the direct child button, not buttons inside forms */
+        /* x close button: only the direct child button of the modal */
         .modal-content > button {
             position: absolute;
             top: 0.75rem;
