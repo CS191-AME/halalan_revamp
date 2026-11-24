@@ -29,5 +29,5 @@
             @endforeach
         </tbody>
     </table>
-
+@include('admin.parties.create')
 </body>
