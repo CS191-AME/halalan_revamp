@@ -52,9 +52,11 @@
 
             </select>
 
-            @error('parent_id')
-                <p>{{ $message }}</p>
-            @enderror
+            @if ($isFailedCreate)
+                @error('parent_id')
+                    <p>{{ $message }}</p>
+                @enderror
+            @endif
         </div>
 
         {{-- Enable ballots --}}
@@ -70,9 +72,11 @@
                 Enable ballots
             </label>
 
-            @error('ballots_enabled')
-                <p>{{ $message }}</p>
-            @enderror
+            @if ($isFailedCreate)
+                @error('ballots_enabled')
+                    <p>{{ $message }}</p>
+                @enderror
+            @endif
         </div>
 
         {{-- Form buttons --}}
