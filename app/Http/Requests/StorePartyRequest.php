@@ -25,7 +25,7 @@ class StorePartyRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:255'],
             'election_id' => ['required', 'integer', 'exists:elections,id'],
-            'alias' => ['nullable', 'string', 'max:255'],
+            'alias' => ['nullable', 'string', 'lt:name'],
             'description' => ['nullable', 'string', 'max:255'],
             'logo' => ['nullable', 'string', 'max:255'],  // String temporary for now
         ];
