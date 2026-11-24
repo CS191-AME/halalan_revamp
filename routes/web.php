@@ -3,6 +3,7 @@
 use App\Http\Controllers\Elections;
 use App\Http\Controllers\Admin\ElectionController;
 use App\Http\Controllers\Admin\PositionController;
+use App\Http\Controllers\Admin\PartyController;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'home');
@@ -20,4 +21,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::post('positions/{position}/move/{direction}', [PositionController::class, 'move'])
         ->whereIn('direction', ['up', 'down'])
         ->name('positions.move');
+
+    Route::resource('parties', PartyController::class)
+        ->only(['index']);
 });
