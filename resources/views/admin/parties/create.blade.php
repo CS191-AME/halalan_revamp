@@ -1,4 +1,11 @@
+{{-- True only when the failed submission came from this create form --}}
+@php
+    $isFailedCreate = (bool) old('_creating_party');
+@endphp
+
+
 {{-- Party creation popup --}}
+
 
 {{-- Button to open the popup --}}
 <button
@@ -34,7 +41,7 @@
                     type="text"
                     id="party_name"
                     name="name"
-                    value="{{ old('name') }}"
+                    value="{{ $isFailedCreate ? old('name') : '' }}"
                     required
                     maxlength="255"
                 >
@@ -49,7 +56,7 @@
                     type="text"
                     id="party_alias"
                     name="alias"
-                    value="{{ old('alias') }}"
+                    value="{{ $isFailedCreate ? old('alias') : '' }}"
                 >
                 @error('alias')
                     <p>{{ $message }}</p>
@@ -63,9 +70,10 @@
                     @foreach ($elections as $election)
                         <option
                             value="{{ $election->id }}"
-                            @selected(old('election_id') == $election->id)
+                            @selected($isFailedCreate && old('election_id') == $election->id)
                         >
-                            {{ $election->name }}
+                        {{ $election->name }}
+
                         </option>
                     @endforeach
                 </select>
@@ -80,7 +88,7 @@
                     type="text"
                     id="party_description"
                     name="description"
-                    value="{{ old('description') }}"
+                    value="{{ $isFailedCreate ? old('description') : '' }}"
                     maxlength="255"
                 >
                 @error('description')
@@ -97,7 +105,7 @@
 
 
 {{-- Condition prevents opening create dialog box on failed edits --}}
-@if ($errors->any() && old('_creating_party'))
+@if ($errors->any() && $isFailedCreate)
     <script>
         document.getElementById('createPartyModal').showModal();
     </script>
