@@ -1,11 +1,4 @@
-{{--- Election creation popup ---}} 
-
-{{-- Reopen popup when validation fails --}}
-@if ($errors->any())
-    <script>
-        document.getElementById('createElectionModal').showModal();
-    </script>
-@endif
+{{--- Election creation popup ---}}
 
 {{-- Button to open the popup --}}
 <button
@@ -34,6 +27,9 @@
         <form method="POST" action="{{ route('admin.elections.store') }}">
 
             @csrf
+
+            {{-- Inivisible input to indicate currently creating NEW election --}}
+            <input type="hidden" name="_creating_election" value="1">
 
             {{-- Election name --}}
             <div>
@@ -102,3 +98,11 @@
 
     </div>
 </dialog>
+
+
+{{-- Reopen creation popup only when failing in create election dialog--}}
+@if ($errors->any() && old('_creating_election'))
+    <script>
+        document.getElementById('createElectionModal').showModal();
+    </script>
+@endif
