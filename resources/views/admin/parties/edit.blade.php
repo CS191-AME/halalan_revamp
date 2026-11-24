@@ -8,23 +8,21 @@
         @method('PUT')
         <input type="hidden" name="_editing_party_id" value="{{ $party->id }}">
 
-        <div>
-            <label for="edit-name-{{ $party->id }}">Name</label>
-            <input type="text" id="edit-name-{{ $party->id }}" name="name"
-                value="{{ $isFailedEdit ? old('name') : $party->name }}">
-            @if ($isFailedEdit)
-                @error('name') <p>{{ $message }}</p> @enderror
-            @endif
-        </div>
+        <x-field
+            :id="'edit-name-' . $party->id"
+            name="name"
+            label="Name"
+            :value="$isFailedEdit ? old('name') : $party->name"
+            :show-error="$isFailedEdit"
+        />
 
-        <div>
-            <label for="edit-alias-{{ $party->id }}">Alias</label>
-            <input type="text" id="edit-alias-{{ $party->id }}" name="alias"
-                value="{{ $isFailedEdit ? old('alias') : $party->alias }}">
-            @if ($isFailedEdit)
-                @error('alias') <p>{{ $message }}</p> @enderror
-            @endif
-        </div>
+        <x-field
+            :id="'edit-alias-' . $party->id"
+            name="alias"
+            label="Alias"
+            :value="$isFailedEdit ? old('alias') : $party->alias"
+            :show-error="$isFailedEdit"
+        />
 
         <div>
             <label for="edit-election-{{ $party->id }}">Election</label>
