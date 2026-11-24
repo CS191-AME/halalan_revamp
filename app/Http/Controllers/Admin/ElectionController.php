@@ -49,7 +49,6 @@ class ElectionController extends Controller
         //
     }
 
-    // TODO: prevent an election from being moved under itself or one of its own child elections
     /**
      * Update the specified resource in storage.
      */
