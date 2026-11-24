@@ -38,12 +38,18 @@ class Election extends Model
         return $this->hasMany(self::class, 'parent_id');
     }
 
-    // Check the status of the election based on its properties
+    // Status is based on started_at first, so it always agrees with isDraft()
     public function status(): string
     {
-        return $this->is_running
-            ? 'running'
-            : ($this->results_available ? 'ended' : 'draft');
+        if ($this->started_at === null) {
+            return 'draft';
+        }
+
+        if ($this->is_running) {
+            return 'running';
+        }
+
+        return $this->results_available ? 'ended' : 'stopped';
     }
 
     public function isDraft(): bool
