@@ -17,7 +17,21 @@ class ElectionController extends Controller
      */
     public function index(): View
     {
-        $elections = Election::with('parent')->orderBy('id')->get();
+        $all = Election::with('parent')->orderBy('id')->get();
+
+        // Put each child right under its parent and remember how deep it is
+        $elections = collect();
+
+        $addWithChildren = function ($parentId, int $depth) use (&$addWithChildren, &$elections, $all) {
+            foreach ($all->where('parent_id', $parentId) as $election) {
+                $election->depth = $depth;
+                $elections->push($election);
+
+                $addWithChildren($election->id, $depth + 1);
+            }
+        };
+
+        $addWithChildren(null, 0);
 
         $parents = Election::orderBy('name')->get();
 
