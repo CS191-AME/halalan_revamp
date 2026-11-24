@@ -2,10 +2,7 @@
     $isFailedEdit = (string) old('_editing_party_id') === (string) $party->id;
 @endphp
 
-<dialog id="editPartyModal-{{ $party->id }}">
-    <button type="button" onclick="this.closest('dialog').close()">&times;</button>
-    <h2>Edit Party</h2>
-
+<x-modal :id="'editPartyModal-' . $party->id" title="Edit Party">
     <form method="POST" action="{{ route('admin.parties.update', $party) }}">
         @csrf
         @method('PUT')
@@ -60,7 +57,7 @@
         <button type="submit">Save</button>
         <button type="button" onclick="this.closest('dialog').close()">Cancel</button>
     </form>
-</dialog>
+</x-modal>
 
 @if ($errors->any() && $isFailedEdit)
     <script>
