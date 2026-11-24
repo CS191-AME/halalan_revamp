@@ -1,3 +1,8 @@
+{{-- True only when the failed submission came from this create form --}}
+@php
+    $isFailedCreate = (bool) old('_creating_election');
+@endphp
+
 {{-- Election creation popup --}}
 
 {{-- Button to open the popup --}}
@@ -25,7 +30,7 @@
                 type="text"
                 id="name"
                 name="name"
-                value="{{ old('name') }}"
+                value="{{ $isFailedCreate ? old('name') : '' }}"
                 required
                 maxlength="255"
             >
@@ -46,7 +51,7 @@
                 @foreach ($parents as $parent)
                     <option
                         value="{{ $parent->id }}"
-                        @selected(old('parent_id') == $parent->id)
+                        @selected($isFailedCreate && old('parent_id') == $parent->id)
                     >
                         {{ $parent->name }}
                     </option>
@@ -66,7 +71,7 @@
                     type="checkbox"
                     name="ballots_enabled"
                     value="1"
-                    @checked(old('ballots_enabled'))
+                    @checked($isFailedCreate && old('ballots_enabled'))
                 >
 
                 Enable ballots
@@ -85,7 +90,7 @@
 </x-modal>
 
 {{-- Reopen creation popup only when failing in create election dialog --}}
-@if ($errors->any() && old('_creating_election'))
+@if ($errors->any() && $isFailedCreate)
     <script>
         document.getElementById('createElectionModal').showModal();
     </script>
