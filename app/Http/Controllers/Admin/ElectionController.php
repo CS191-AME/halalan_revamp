@@ -170,10 +170,47 @@ class ElectionController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Delete a draft election.
      */
-    public function destroy(string $id)
+    public function destroy(Election $election): RedirectResponse
     {
-        //
+        $backTo = redirect()->route('admin.elections.index');
+
+        $error = DB::transaction(function () use ($election) {
+            // Lock the row so nobody can start it between the checks and the delete
+            $locked = Election::lockForUpdate()->findOrFail($election->id);
+
+            if (!$locked->isDraft()) {
+                return 'Only draft elections can be deleted.';
+            }
+
+            // TEMPORARY: block instead of deleting related rows along with the election.
+            // Revisit once we decide whether to cascade (positions, parties, blocks).
+            if ($locked->children()->exists()) {
+                return 'Cannot delete an election that has child elections.';
+            }
+
+            if ($locked->positions()->exists()) {
+                return 'Cannot delete an election that still has positions.';
+            }
+
+            if ($locked->parties()->exists()) {
+                return 'Cannot delete an election that still has parties.';
+            }
+
+            if (DB::table('blocks_elections')->where('election_id', $locked->id)->exists()) {
+                return 'Cannot delete an election that is linked to a block.';
+            }
+
+            $locked->delete();
+
+            return null;
+        });
+
+        if ($error !== null) {
+            return $backTo->with('error', $error);
+        }
+
+        return $backTo->with('status', 'Election deleted.');
     }
 }
