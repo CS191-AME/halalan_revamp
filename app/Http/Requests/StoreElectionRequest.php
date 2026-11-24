@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreElectionRequest extends FormRequest
 {
@@ -30,7 +31,7 @@ class StoreElectionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:255'],
+            'name' => ['required', 'string', 'max:255', Rule::unique('elections', 'name')],
             'parent_id' => ['nullable', 'integer', 'exists:elections,id'],
             'ballots_enabled' => ['boolean'],
         ];

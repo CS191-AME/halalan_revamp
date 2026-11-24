@@ -3,9 +3,9 @@
 namespace App\Http\Requests;
 
 use App\Models\Election;
-
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateElectionRequest extends FormRequest
 {
@@ -40,7 +40,7 @@ class UpdateElectionRequest extends FormRequest
         // Different rules apply depending on whether the election is a draft or not
         if ($election->isDraft()) {
             return [
-                'name' => ['required', 'string', 'max:255'],
+                'name' => ['required', 'string', 'max:255', Rule::unique('elections', 'name')->ignore($election)],
 
                 'parent_id' => [
                     'nullable',
@@ -50,13 +50,15 @@ class UpdateElectionRequest extends FormRequest
                     // Makes sure that the election is not placed under itself or one of its own child elections
                     function ($attribute, $value, $fail) use ($election) {
                         if (
-                            $value !== null &&
-                            in_array(
+                            $value !== null
+                            && in_array(
                                 (int) $value,
                                 Election::subtreeIds($election->id),
                                 true
                             )
-                        ) { $fail('An election cannot be placed under itself or one of its own child elections.'); }
+                        ) {
+                            $fail('An election cannot be placed under itself or one of its own child elections.');
+                        }
                     },
                 ],
 
@@ -64,7 +66,7 @@ class UpdateElectionRequest extends FormRequest
             ];
         } else {
             return [
-                'name' => ['required', 'string', 'max:255'],
+                'name' => ['required', 'string', 'max:255', Rule::unique('elections', 'name')->ignore($election)],
                 'parent_id' => ['prohibited'],
                 'ballots_enabled' => ['prohibited'],
             ];
