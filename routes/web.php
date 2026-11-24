@@ -13,7 +13,7 @@ Route::post('/create_election', [Elections::class, 'createElection']);
 Route::prefix('admin')->name('admin.')->group(function () {
 
     Route::resource('elections', ElectionController::class)
-        ->only(['index', 'store', 'edit', 'update']);
+        ->only(['index', 'store', 'update']);
 
     Route::resource('positions', PositionController::class)
         ->only(['index', 'store', 'update', 'destroy']);

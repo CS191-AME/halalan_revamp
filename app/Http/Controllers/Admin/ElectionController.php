@@ -6,12 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Models\Election;
 use App\Http\Requests\StoreElectionRequest;
 use App\Http\Requests\UpdateElectionRequest;
-
 use Illuminate\Http\Request;
 
 class ElectionController extends Controller
 {
-    
     /**
      * Display a listing of the resource.
      */
@@ -50,20 +48,7 @@ class ElectionController extends Controller
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Election $election)
-    {
-        // Editable parent elections
-        // IDEA: Make it so that the election cannot be placed under itself or one of its own child elections
-        // $parents = Election::where('id', '!=', $election->id)
-        //     ->orderBy('name')
-        //     ->get();
-
-        // return view('admin.elections.edit', compact('election', 'parents'));
-    }
-
+    // TODO: prevent an election from being moved under itself or one of its own child elections
     /**
      * Update the specified resource in storage.
      */
