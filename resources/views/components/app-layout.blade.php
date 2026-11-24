@@ -20,6 +20,10 @@
             background: #fff;
             border-radius: 0.75rem;
         }
+        .modal {
+            width: 32rem;
+            max-width: 90vw;
+        }
     </style>
 </head>
 <body>
