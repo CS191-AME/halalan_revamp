@@ -23,22 +23,15 @@
         <input type="hidden" name="_creating_election" value="1">
 
         {{-- Election name --}}
-        <div>
-            <label for="name">Election Name</label>
-
-            <input
-                type="text"
-                id="name"
-                name="name"
-                value="{{ $isFailedCreate ? old('name') : '' }}"
-                required
-                maxlength="255"
-            >
-
-            @error('name')
-                <p>{{ $message }}</p>
-            @enderror
-        </div>
+        <x-field
+            id="name"
+            name="name"
+            label="Election Name"
+            :value="$isFailedCreate ? old('name') : ''"
+            :show-error="$isFailedCreate"
+            required
+            maxlength="255"
+        />
 
         {{-- Parent election --}}
         <div>
