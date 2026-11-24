@@ -1,10 +1,7 @@
-<!DOCTYPE html>
-<head>
-    <title>Halalan Revamp!</title>
-</head>
-<body>
+<x-app-layout title="Elections">
 
-<h1>Elections</h1>
+
+    <h1>Elections</h1>
 
     <table>
         <thead>
@@ -46,4 +43,5 @@
     ])
 @endforeach
 
-</body>
+</x-app-layout>
+
