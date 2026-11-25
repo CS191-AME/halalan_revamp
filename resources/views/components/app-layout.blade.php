@@ -212,6 +212,18 @@
             font: inherit;
         }
 
+        /* hide the up and down arrows on number fields */
+        input[type="number"] {
+            -moz-appearance: textfield;
+            appearance: textfield;
+        }
+
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
         /* validation messages inside forms */
         form p {
             margin: 0.25rem 0 0;
