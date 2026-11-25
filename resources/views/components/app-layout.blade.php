@@ -108,12 +108,12 @@
 
         /* delete button: any button in a form that has a DELETE method input */
         form:has(input[name="_method"][value="DELETE"]) button {
-            background: #f87171;
+            background: #8b0000;
             color: #fff;
         }
 
         form:has(input[name="_method"][value="DELETE"]) button:hover {
-            background: #ef4444;
+            background: #6b0000;
         }
 
         /* status pill */
