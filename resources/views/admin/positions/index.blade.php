@@ -9,7 +9,7 @@
 
     {{-- Error message --}}
     @if (session('error'))
-        <p>Error: {{ session('error') }}</p>
+        <p class="flash-error">Error: {{ session('error') }}</p>
     @endif
 
     {{-- Election selection --}}
@@ -41,9 +41,11 @@
 
     </form>
 
-    {{-- No elections available --}}
+    {{-- No elections available (div wrapper so the flash message style does not apply) --}}
     @if ($elections->isEmpty())
-        <p>No elections have been created yet.</p>
+        <div>
+            <p>No elections have been created yet.</p>
+        </div>
     @endif
 
     {{-- Positions table --}}
@@ -93,7 +95,6 @@
                                     method="POST"
                                     action="{{ route('admin.positions.destroy', $position) }}"
                                     onsubmit="return confirm('Delete this position?')"
-                                    style="display: inline"
                                 >
                                     @csrf
                                     @method('DELETE')
