@@ -1,6 +1,6 @@
 <x-app-layout title="Parties">
 
-    <h1>Parties</h1>
+    <h1>Manage Parties</h1>
 
     {{-- Success message --}}
     @if (session('status'))
@@ -9,7 +9,7 @@
 
     {{-- Error message --}}
     @if (session('error'))
-        <p>Error: {{ session('error') }}</p>
+        <p class="flash-error">Error: {{ session('error') }}</p>
     @endif
 
     <table>
@@ -42,7 +42,6 @@
                             method="POST"
                             action="{{ route('admin.parties.destroy', $p) }}"
                             onsubmit="return confirm('Delete this party?')"
-                            style="display: inline"
                         >
                             @csrf
                             @method('DELETE')
