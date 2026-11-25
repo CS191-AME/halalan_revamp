@@ -14,6 +14,22 @@
             color: #1f2937;
         }
 
+        /* top bar with the home link, same width as the card so it lines up on the left */
+        .top-bar {
+            max-width: 64rem;
+            margin: 0 auto 1rem;
+        }
+
+        .home-link {
+            color: #7f1d1d;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .home-link:hover {
+            text-decoration: underline;
+        }
+
         .card {
             max-width: 64rem;
             margin: 0 auto;
@@ -143,7 +159,7 @@
             background: #22c55e;
         }
 
-        /* results button: white like the pill, grey when disabled */
+        /* results button: white, grey when disabled */
         button.results-button {
             background: #fff;
             color: #1f2937;
@@ -256,6 +272,10 @@
     </style>
 </head>
 <body>
+    <div class="top-bar">
+        <a class="home-link" href="{{ url('/') }}">&larr; Home</a>
+    </div>
+
     <div class="card">
         {{ $slot }}
     </div>
